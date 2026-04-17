@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grand Soleil — Hotel & Resort</title>
+
+  <!-- PWA Meta Tags -->
+  <meta name="theme-color" content="#C9A84C" />
+  <meta name="description" content="Hotel de lujo en el Mediterráneo. Reserva tu estancia en Grand Soleil." />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Grand Soleil" />
+  <meta name="mobile-web-app-capable" content="yes" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Grand Soleil Hotel & Resort" />
+  <meta property="og:description" content="Lujo, confort y memorias eternas en el Mediterráneo." />
+  <meta property="og:type" content="website" />
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="/manifest.json" />
+
+  <!-- Apple Touch Icons -->
+  <link rel="apple-touch-icon" href="/icons/icon-152.png" />
+  <link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192.png" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-96.png" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <!-- Stripe.js — cargado desde sus servidores (requerido para PCI compliance) -->
+  <script src="https://js.stripe.com/v3/" defer></script>
+
+  <!-- Estilos -->
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+  <!-- ══ INSTALL BANNER (PWA) ══════════════════════════════════════════════ -->
+  <div class="pwa-banner" id="pwaBanner" hidden>
+    <div class="pwa-banner__content">
+      <img src="/icons/icon-72.png" alt="Grand Soleil" width="40" height="40" />
+      <div>
+        <strong>Instalar Grand Soleil</strong>
+        <span>Accede rápido desde tu pantalla de inicio</span>
+      </div>
+    </div>
+    <div class="pwa-banner__actions">
+      <button class="pwa-banner__install" id="pwaBannerInstall">Instalar</button>
+      <button class="pwa-banner__dismiss" id="pwaBannerDismiss" aria-label="Cerrar">✕</button>
+    </div>
+  </div>
+
+  <!-- ══ NAV ═══════════════════════════════════════════════════════════════ -->
+  <nav class="nav" id="navbar">
+    <div class="nav__logo">Grand Soleil</div>
+    <ul class="nav__links">
+      <li><a href="#habitaciones">Habitaciones</a></li>
+      <li><a href="#amenidades">Amenidades</a></li>
+      <li><a href="#reserva">Reservar</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+    </ul>
+    <button class="nav__cta" onclick="scrollToSection('reserva')">Reservar ahora</button>
+    <button class="nav__burger" id="burger" aria-label="Menú" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+    <ul>
+      <li><a href="#habitaciones" onclick="closeMenu()">Habitaciones</a></li>
+      <li><a href="#amenidades" onclick="closeMenu()">Amenidades</a></li>
+      <li><a href="#reserva" onclick="closeMenu()">Reservar</a></li>
+      <li><a href="#contacto" onclick="closeMenu()">Contacto</a></li>
+    </ul>
+  </div>
+
+  <!-- ══ HERO ══════════════════════════════════════════════════════════════ -->
+  <header class="hero" id="inicio">
+    <div class="hero__bg">
+      <div class="hero__overlay"></div>
+      <div class="hero__grid-lines"></div>
+    </div>
+    <div class="hero__content">
+      <span class="hero__eyebrow">Bienvenido a</span>
+      <h1 class="hero__title">Grand<br/><em>Soleil</em></h1>
+      <p class="hero__subtitle">Experiencias de lujo en el corazón del Mediterráneo</p>
+      <div class="hero__actions">
+        <button class="btn btn--primary" onclick="scrollToSection('reserva')">Hacer una reserva</button>
+        <button class="btn btn--ghost" onclick="scrollToSection('habitaciones')">Ver habitaciones</button>
+      </div>
+    </div>
+    <div class="hero__scroll-indicator">
+      <span>Scroll</span>
+      <div class="hero__scroll-line"></div>
+    </div>
+    <div class="hero__stats">
+      <div class="stat"><span class="stat__num">48</span><span class="stat__label">Suites</span></div>
+      <div class="stat__divider"></div>
+      <div class="stat"><span class="stat__num">5★</span><span class="stat__label">Calificación</span></div>
+      <div class="stat__divider"></div>
+      <div class="stat"><span class="stat__num">12</span><span class="stat__label">Años</span></div>
+    </div>
+  </header>
+
+  <!-- Intro -->
+  <section class="intro-strip">
+    <p class="intro-strip__text">Donde cada detalle cuenta — desde las sábanas de lino egipcio hasta el horizonte infinito frente a tu balcón.</p>
+  </section>
+
+  <!-- ══ HABITACIONES ══════════════════════════════════════════════════════ -->
+  <section class="section rooms" id="habitaciones">
+    <div class="section__header">
+      <span class="section__tag">Alojamiento</span>
+      <h2 class="section__title">Nuestras <em>Habitaciones</em></h2>
+      <p class="section__desc">Cada espacio diseñado para despertar los sentidos y reconectar con lo esencial.</p>
+    </div>
+    <div class="rooms__grid">
+
+      <article class="room-card" data-room="standard" data-price="280" data-currency="mxn">
+        <div class="room-card__img room-card__img--1">
+          <span class="room-card__badge">Más popular</span>
+        </div>
+        <div class="room-card__body">
+          <div class="room-card__category">Suite Clásica</div>
+          <h3 class="room-card__name">Soleil Standard</h3>
+          <p class="room-card__desc">Elegancia atemporal con vistas al jardín mediterráneo, cama king size y baño de mármol.</p>
+          <ul class="room-card__features">
+            <li>45 m²</li><li>Vista jardín</li><li>King Size</li><li>Wi-Fi 1 Gbps</li>
+          </ul>
+          <div class="room-card__footer">
+            <div class="room-card__price"><span>desde</span> $280 <small>/noche</small></div>
+            <button class="btn btn--small" onclick="selectRoom('Soleil Standard', 280)">Reservar</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="room-card room-card--featured" data-room="vista-mar" data-price="480" data-currency="mxn">
+        <div class="room-card__img room-card__img--2">
+          <span class="room-card__badge room-card__badge--gold">Premium</span>
+        </div>
+        <div class="room-card__body">
+          <div class="room-card__category">Suite Premium</div>
+          <h3 class="room-card__name">Soleil Vista Mar</h3>
+          <p class="room-card__desc">Panoramas del Mediterráneo desde tu cama. Terraza privada con jacuzzi exterior y servicio 24h.</p>
+          <ul class="room-card__features">
+            <li>72 m²</li><li>Vista al mar</li><li>Jacuzzi</li><li>Servicio 24h</li>
+          </ul>
+          <div class="room-card__footer">
+            <div class="room-card__price"><span>desde</span> $480 <small>/noche</small></div>
+            <button class="btn btn--small" onclick="selectRoom('Soleil Vista Mar', 480)">Reservar</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="room-card" data-room="penthouse" data-price="950" data-currency="mxn">
+        <div class="room-card__img room-card__img--3">
+          <span class="room-card__badge">Exclusiva</span>
+        </div>
+        <div class="room-card__body">
+          <div class="room-card__category">Suite Presidencial</div>
+          <h3 class="room-card__name">Penthouse Soleil</h3>
+          <p class="room-card__desc">Dos plantas de lujo absoluto con cocina privada, sala de estar y acceso a zona VIP exclusiva.</p>
+          <ul class="room-card__features">
+            <li>140 m²</li><li>2 plantas</li><li>Cocina priv.</li><li>Acceso VIP</li>
+          </ul>
+          <div class="room-card__footer">
+            <div class="room-card__price"><span>desde</span> $950 <small>/noche</small></div>
+            <button class="btn btn--small" onclick="selectRoom('Penthouse Soleil', 950)">Reservar</button>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ══ AMENIDADES ════════════════════════════════════════════════════════ -->
+  <section class="section amenities" id="amenidades">
+    <div class="amenities__inner">
+      <div class="section__header section__header--light">
+        <span class="section__tag section__tag--light">Experiencias</span>
+        <h2 class="section__title">Nuestras <em>Amenidades</em></h2>
+        <p class="section__desc section__desc--light">Todo lo que necesitas para una estancia perfecta.</p>
+      </div>
+      <div class="amenities__grid">
+        <div class="amenity-card"><div class="amenity-card__icon">🏊</div><h3>Piscina Infinita</h3><p>Piscina de borde infinito con vista panorámica al mar. Abierta las 24 horas para huéspedes.</p></div>
+        <div class="amenity-card"><div class="amenity-card__icon">🧖</div><h3>Spa & Wellness</h3><p>Tratamientos personalizados, sauna finlandesa, baño turco y masajes de aromaterapia.</p></div>
+        <div class="amenity-card"><div class="amenity-card__icon">🍽️</div><h3>Restaurante Gourmet</h3><p>Cocina mediterránea de autor con ingredientes locales de temporada. Chef con estrella Michelin.</p></div>
+        <div class="amenity-card"><div class="amenity-card__icon">🏋️</div><h3>Fitness Center</h3><p>Gimnasio equipado con maquinaria de última generación y entrenadores personales disponibles.</p></div>
+        <div class="amenity-card"><div class="amenity-card__icon">🍸</div><h3>Sky Bar</h3><p>Cócteles artesanales en la terraza de la azotea con las mejores vistas del horizonte.</p></div>
+        <div class="amenity-card"><div class="amenity-card__icon">🚤</div><h3>Excursiones Privadas</h3><p>Yate privado, tours a islas, buceo y actividades náuticas exclusivas para huéspedes.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery Strip -->
+  <section class="gallery-strip">
+    <div class="gallery-strip__item gallery-strip__item--1"></div>
+    <div class="gallery-strip__item gallery-strip__item--2"></div>
+    <div class="gallery-strip__item gallery-strip__item--3"></div>
+    <div class="gallery-strip__item gallery-strip__item--4"></div>
+  </section>
+
+  <!-- ══ RESERVA ═══════════════════════════════════════════════════════════ -->
+  <section class="section booking" id="reserva">
+    <div class="booking__inner">
+
+      <!-- Copy -->
+      <div class="booking__copy">
+        <span class="section__tag">Reservaciones</span>
+        <h2 class="section__title">Planifica tu <em>Estancia</em></h2>
+        <p>Reserva directamente con nosotros y obtén el mejor precio garantizado, más beneficios exclusivos.</p>
+        <ul class="booking__perks">
+          <li>✓ Mejor precio garantizado</li>
+          <li>✓ Cancelación gratuita hasta 48h antes</li>
+          <li>✓ Check-in anticipado sujeto a disponibilidad</li>
+          <li>✓ Desayuno de bienvenida incluido</li>
+        </ul>
+        <!-- Resumen de reserva (aparece cuando se elige habitación) -->
+        <div class="booking__summary" id="bookingSummary" hidden>
+          <h4>Resumen de tu reserva</h4>
+          <div class="summary-row"><span>Habitación</span><strong id="sumRoom">—</strong></div>
+          <div class="summary-row"><span>Check-in</span><strong id="sumIn">—</strong></div>
+          <div class="summary-row"><span>Check-out</span><strong id="sumOut">—</strong></div>
+          <div class="summary-row"><span>Noches</span><strong id="sumNights">—</strong></div>
+          <div class="summary-row summary-row--total"><span>Total</span><strong id="sumTotal">—</strong></div>
+        </div>
+      </div>
+
+      <!-- Multi-step form -->
+      <div class="booking__form-wrap">
+
+        <!-- PASO 1: Datos de reserva -->
+        <form class="booking-form" id="bookingForm">
+          <div class="booking-form__steps">
+            <div class="step active" id="step1">
+              <h3 class="booking-form__title">1. Datos de la estancia</h3>
+
+              <div class="form-group">
+                <label>Tipo de habitación</label>
+                <select id="roomSelect" required>
+                  <option value="">Seleccionar habitación...</option>
+                  <option value="Soleil Standard|280">Soleil Standard — $280/noche</option>
+                  <option value="Soleil Vista Mar|480">Soleil Vista Mar — $480/noche</option>
+                  <option value="Penthouse Soleil|950">Penthouse Soleil — $950/noche</option>
+                </select>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Check-in</label>
+                  <input type="date" id="checkIn" required />
+                </div>
+                <div class="form-group">
+                  <label>Check-out</label>
+                  <input type="date" id="checkOut" required />
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Adultos</label>
+                  <select id="adults">
+                    <option>1</option><option selected>2</option><option>3</option><option>4</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Niños</label>
+                  <select id="children">
+                    <option selected>0</option><option>1</option><option>2</option><option>3</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Nombre completo</label>
+                <input type="text" id="guestName" placeholder="Nombre y apellidos" required />
+              </div>
+
+              <div class="form-group">
+                <label>Correo electrónico</label>
+                <input type="email" id="guestEmail" placeholder="correo@ejemplo.com" required />
+              </div>
+
+              <div class="form-group">
+                <label>Peticiones especiales <small>(opcional)</small></label>
+                <textarea id="specialReq" placeholder="Aniversario, dieta especial, accesibilidad..."></textarea>
+              </div>
+
+              <button type="button" class="btn btn--primary btn--full" id="toPaymentBtn">
+                Continuar al pago →
+              </button>
+              <p class="booking-form__note">Sin cargo hasta confirmar la reserva.</p>
+            </div>
+
+            <!-- PASO 2: Pago con Stripe -->
+            <div class="step" id="step2" hidden>
+              <div class="step2-header">
+                <button type="button" class="back-btn" id="backBtn">← Volver</button>
+                <h3 class="booking-form__title">2. Pago seguro</h3>
+              </div>
+
+              <div class="payment-summary" id="paymentSummary"></div>
+
+              <!-- Stripe Elements se monta aquí -->
+              <div class="form-group">
+                <label>Datos de tarjeta</label>
+                <div id="payment-element" class="stripe-element-container"></div>
+                <div id="stripe-errors" class="stripe-error" role="alert"></div>
+              </div>
+
+              <button type="submit" class="btn btn--primary btn--full btn--pay" id="submitPayBtn" disabled>
+                <span id="payBtnText">Pagar ahora</span>
+                <span id="payBtnSpinner" class="spinner" hidden></span>
+              </button>
+
+              <div class="payment-security">
+                <span>🔒</span>
+                <p>Pago procesado de forma segura por <strong>Stripe</strong>. Tu información está cifrada con TLS 1.3.</p>
+              </div>
+            </div>
+
+            <!-- PASO 3: Confirmación -->
+            <div class="step" id="step3" hidden>
+              <div class="confirmation">
+                <div class="confirmation__icon">✓</div>
+                <h3>¡Reserva confirmada!</h3>
+                <p id="confirmationMsg">Tu reserva ha sido procesada correctamente. Recibirás un correo de confirmación en breve.</p>
+                <div class="confirmation__details" id="confirmationDetails"></div>
+                <button type="button" class="btn btn--primary" onclick="resetBooking()">Nueva reserva</button>
+              </div>
+            </div>
+
+          </div><!-- /.booking-form__steps -->
+        </form>
+
+      </div><!-- /.booking__form-wrap -->
+    </div><!-- /.booking__inner -->
+  </section>
+
+  <!-- ══ TESTIMONIOS ════════════════════════════════════════════════════════ -->
+  <section class="section testimonials">
+    <div class="section__header">
+      <span class="section__tag">Opiniones</span>
+      <h2 class="section__title">Lo que dicen <em>nuestros huéspedes</em></h2>
+    </div>
+    <div class="testimonials__grid">
+      <blockquote class="testimonial"><p>"Una experiencia absolutamente transformadora. El servicio, la vista, la comida... todo impecable."</p><footer><strong>María González</strong> — Madrid, España</footer></blockquote>
+      <blockquote class="testimonial testimonial--featured"><p>"El penthouse superó todas nuestras expectativas. El staff anticipó cada necesidad."</p><footer><strong>James Whitmore</strong> — London, UK</footer></blockquote>
+      <blockquote class="testimonial"><p>"El spa es de otro mundo. Llegamos agotados y nos fuimos renovados. Experiencia memorable."</p><footer><strong>Camille Bertrand</strong> — Paris, France</footer></blockquote>
+    </div>
+  </section>
+
+  <!-- ══ FOOTER / CONTACTO ══════════════════════════════════════════════════ -->
+  <footer class="footer" id="contacto">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <div class="footer__logo">Grand Soleil</div>
+        <p>Lujo, confort y memorias eternas en el Mediterráneo.</p>
+        <div class="footer__social">
+          <a href="#" aria-label="Instagram">IG</a>
+          <a href="#" aria-label="Facebook">FB</a>
+          <a href="#" aria-label="Twitter">TW</a>
+        </div>
+      </div>
+      <div class="footer__nav">
+        <h4>Navegación</h4>
+        <ul>
+          <li><a href="#habitaciones">Habitaciones</a></li>
+          <li><a href="#amenidades">Amenidades</a></li>
+          <li><a href="#reserva">Reservar</a></li>
+        </ul>
+      </div>
+      <div class="footer__nav">
+        <h4>Hotel</h4>
+        <ul>
+          <li><a href="#">Sobre nosotros</a></li>
+          <li><a href="#">Política de privacidad</a></li>
+          <li><a href="#">Términos y condiciones</a></li>
+        </ul>
+      </div>
+      <div class="footer__contact">
+        <h4>Contacto</h4>
+        <p>📍 Paseo Mediterráneo 12, Costa del Sol</p>
+        <p>📞 +34 951 000 000</p>
+        <p>✉️ reservas@grandsoleil.com</p>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <p>© 2025 Grand Soleil Hotel & Resort. Todos los derechos reservados.</p>
+      <p>Pagos seguros procesados por Stripe 🔒</p>
+    </div>
+  </footer>
+
+  <!-- Toast -->
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <span id="toastMsg"></span>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/js/app.js"></script>
+  <script src="/js/booking.js"></script>
+</body>
+</html>
